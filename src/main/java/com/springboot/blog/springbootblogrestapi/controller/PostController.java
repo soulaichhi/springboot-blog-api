@@ -39,4 +39,9 @@ return ResponseEntity.ok(postService.getPostById(id));
         PostDto postResponse = postService.updatePost(postDto, id);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePostById(@PathVariable long id){
+        postService.deletePostById(id);
+        return new ResponseEntity<>("Post Deleted successfully", HttpStatus.OK);
+    }
 }
