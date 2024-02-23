@@ -49,6 +49,20 @@ if (!comment.getPost().getId().equals(post.getId())){
         return mapToDTO(comment);
     }
 
+    @Override
+    public CommentDto updateComment(Long postId, long commentId, CommentDto commentRequest) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("post", "postId", postId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId",commentId));
+if (!comment.getPost().getId().equals(post.getId())){
+    throw  new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+}
+comment.setName(commentRequest.getName());
+comment.setEmail(commentRequest.getEmail());
+comment.setBody(commentRequest.getBody());
+Comment updatedComment = commentRepository.save(comment);
+        return mapToDTO(updatedComment);
+    }
+
     private CommentDto mapToDTO(Comment comment){
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
