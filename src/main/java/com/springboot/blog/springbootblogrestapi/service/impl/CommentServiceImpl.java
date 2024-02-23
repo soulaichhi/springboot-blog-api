@@ -63,6 +63,17 @@ Comment updatedComment = commentRepository.save(comment);
         return mapToDTO(updatedComment);
     }
 
+    @Override
+    public void deleteComment(Long postId, Long commentId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("post", "postId", postId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId",commentId));
+        if (!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment Not exist");
+        }
+        commentRepository.deleteById(commentId);
+//        commentRepository.delete(comment);
+    }
+
     private CommentDto mapToDTO(Comment comment){
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
